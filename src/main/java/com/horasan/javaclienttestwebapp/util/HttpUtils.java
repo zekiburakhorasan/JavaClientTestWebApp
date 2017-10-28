@@ -5,11 +5,22 @@
  */
 package com.horasan.javaclienttestwebapp.util;
 
+import org.springframework.http.HttpHeaders;
 /**
  *
  * @author HORASAN
  */
 public final class HttpUtils
 {
+    public HttpUtils()
+    {
+        throw new IllegalAccessError("Final Utility Class");
+    }
     
+    public static HttpHeaders generateAuthorizantionHeader(String authToken)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        return headers;
+    }
 }
