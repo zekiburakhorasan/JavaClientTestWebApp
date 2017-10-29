@@ -5,23 +5,24 @@
  */
 package com.horasan.javaclienttestwebapp.helper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.horasan.javaclienttestwebapp.security.AuthenticationData;
 import com.horasan.javaclienttestwebapp.util.HttpUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.horasan.javaclienttestwebapp.model.request.TransactionListRequest;
+import com.horasan.javaclienttestwebapp.model.request.TransactionReportRequest;
+import com.horasan.javaclienttestwebapp.model.response.LoginResponse;
+import com.horasan.javaclienttestwebapp.model.response.TransactionListResponse;
+import com.horasan.javaclienttestwebapp.model.response.TransactionReportResponse;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Properties;
-import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpSession;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientException;
@@ -50,7 +51,7 @@ public class ApiProcess
         }
         catch (IOException ex) {}
     }
-    public LoginResponse getLoginResponse(LoginRequest loginRequest)
+    public LoginResponse getLoginResponse(LoginResponse loginRequest)
     {
         String url = properties.getProperty("MerchantLogin");
         LoginResponse loginResponse = new LoginResponse(0, "", "", "");

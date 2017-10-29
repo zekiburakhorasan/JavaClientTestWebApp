@@ -7,6 +7,11 @@ package com.horasan.javaclienttestwebapp.controller;
 
 import com.horasan.javaclienttestwebapp.security.AuthenticationData;
 import com.horasan.javaclienttestwebapp.helper.ApiProcess;
+import com.horasan.javaclienttestwebapp.model.request.TransactionListRequest;
+import com.horasan.javaclienttestwebapp.model.request.TransactionReportRequest;
+import com.horasan.javaclienttestwebapp.model.response.TransactionListResponse;
+import com.horasan.javaclienttestwebapp.model.response.TransactionReportResponse;
+import com.horasan.javaclienttestwebapp.model.view.TransactionListView;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +46,7 @@ public class TransactionController
     }
     
     @GetMapping(path = "/report")
-    public String getReport(TransactionReportRequest transactionReportRequest
+    public String getReport(TransactionReportRequest transactionReportRequest)
     {
         return "transactionReport";
     }
@@ -49,9 +54,9 @@ public class TransactionController
     @PostMapping(path = "/report")
     public String postReport(@Valid TransactionReportRequest transactionReportRequest, 
             BindingResult bindingResult,
-            Model model
+            Model model)
     {
-        TransactionReportResponse transactionReportResponse = new APIProcess()
+        TransactionReportResponse transactionReportResponse = new ApiProcess()
                 .getTransactionReportResponse(transactionReportRequest, httpSession);
         model.addAttribute("transactionReportResponse", transactionReportResponse);
         return "transactionReport";
@@ -80,7 +85,7 @@ public class TransactionController
                         transactionListView.getFilterField(),
                         transactionListView.getFilterValue(),
                         transactionListView.getPage());
-        TransactionListResponse transactionListResponse = new APIProcess()
+        TransactionListResponse transactionListResponse = new ApiProcess()
                 .getTransactionListResponse(transactionListRequest, httpSession);
         model.addAttribute("transactionListResponse", transactionListResponse);
         return "transactionList";

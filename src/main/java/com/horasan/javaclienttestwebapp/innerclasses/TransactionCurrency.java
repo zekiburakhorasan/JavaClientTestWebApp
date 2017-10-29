@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.horasan.javaclienttestwebapp.model.request;
+package com.horasan.javaclienttestwebapp.innerclasses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -22,17 +22,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransactionListRequest
+public class TransactionCurrency
 {
-    private String fromDate;
-    private String toDate;
-    private String status;
-    private String operation;
-    private String merchantId;
-    private String acquirerId;
-    private String paymentMethod;
-    private String errorCode;
-    private String filterField;
-    private String filterValue;
-    private String page;
+    private int count, total;
+    private String currency;
 }

@@ -17,7 +17,7 @@ public final class HttpUtils
         throw new IllegalAccessError("Final Utility Class");
     }
     
-    public static HttpHeaders generateAuthorizantionHeader(String authToken)
+    public static HttpHeaders generateAuthorizationHeader(String authToken)
     {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authToken);
