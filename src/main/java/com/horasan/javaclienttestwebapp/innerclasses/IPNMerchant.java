@@ -16,7 +16,32 @@ import lombok.Setter;
  *
  * @author HORASAN
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IPNMerchant
 {
-    
+    private int date;
+    private int amount;
+    private int convertedAmount;
+    private String ipnType;
+    private String code;
+    private String referenceNo;
+    private String customData;
+    private String descriptor;
+    private String message;
+    private String type;
+    private String transactionId;
+    private String paymentType;
+    private String token;
+    private String chainId;
+    private String IPNUrl;
+    private String authTransactionId;
+    private String currency;
+    private String operation;
+    private String status;
+    private String convertedCurrency;
 }

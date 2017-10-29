@@ -79,8 +79,7 @@ public class TransactionListView
         errorCode​List.put("Currency not allowed", "Currency not allowed");
         errorCode​List.put("3-D Secure Transport Error", "3-D Secure Transport Error");
         errorCode​List.put("Transaction not permitted to cardholder", "Transaction not permitted to cardholder");
-
-//        filterField​ : { "Transaction UUID", "Customer Email", "Reference No", "Custom Data", "Card PAN" }
+        
         filterField​List = new HashMap<>();
         filterField​List.put("Transaction UUID", "Transaction UUID");
         filterField​List.put("Customer Email", "Customer Email");

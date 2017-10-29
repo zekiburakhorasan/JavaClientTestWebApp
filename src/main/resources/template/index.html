@@ -1,0 +1,14 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:include="fragments :: head(~{::title}, null, null)">
+        <title>Report Api Test Application</title>
+    </head>
+    <body th:include="fragments :: body(~{::contents}, null)" class="nav-md">
+    <contents th:remove="tag">
+        <p>Request for list of transaction reports.<a href="/transactions/report">here</a></p>
+        <p>Request for list of transaction.<a href="/transactions/list">here</a></p>
+        <p>Request for all information of transaction.<a href="/transaction">here</a></p>
+        <p>Request for information of client.<a href="/client">here</a></p>
+    </contents>
+    </body>
+</html>
