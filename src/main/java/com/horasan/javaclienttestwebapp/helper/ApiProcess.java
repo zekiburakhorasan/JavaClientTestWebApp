@@ -5,7 +5,6 @@
  */
 package com.horasan.javaclienttestwebapp.helper;
 
-
 import com.horasan.javaclienttestwebapp.security.AuthenticationData;
 import com.horasan.javaclienttestwebapp.util.HttpUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
