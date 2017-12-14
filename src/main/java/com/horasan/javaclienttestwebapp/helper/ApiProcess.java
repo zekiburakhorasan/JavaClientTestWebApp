@@ -9,9 +9,11 @@ import com.horasan.javaclienttestwebapp.security.AuthenticationData;
 import com.horasan.javaclienttestwebapp.util.HttpUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.horasan.javaclienttestwebapp.model.request.ClientRequest;
 import com.horasan.javaclienttestwebapp.model.request.LoginRequest;
 import com.horasan.javaclienttestwebapp.model.request.TransactionListRequest;
 import com.horasan.javaclienttestwebapp.model.request.TransactionReportRequest;
+import com.horasan.javaclienttestwebapp.model.response.ClientResponse;
 import com.horasan.javaclienttestwebapp.model.response.LoginResponse;
 import com.horasan.javaclienttestwebapp.model.response.TransactionListResponse;
 import com.horasan.javaclienttestwebapp.model.response.TransactionReportResponse;
@@ -35,84 +37,63 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author HORASAN
  */
-public class ApiProcess
-{
+public class ApiProcess {
 
     private final Properties properties = new Properties();
     private final RestTemplate restTemplate = new RestTemplate();
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public ApiProcess()
-    {
-        try
-        {
-            File file = new File("src/main/resources/properties/api.properties");
-            try (FileInputStream fileInputStream = new FileInputStream(file))
-            {
-                properties.load(fileInputStream);
-            }
-        }
-        catch (FileNotFoundException ex)
-        {
-        }
-        catch (IOException ex)
-        {
+    public ApiProcess() {
+        File file = new File("src/main/resources/properties/api.properties");
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            properties.load(fileInputStream);
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
         }
     }
 
-    public LoginResponse getLoginResponse(LoginRequest loginRequest)
-    {
+    public LoginResponse getLoginResponse(LoginRequest loginRequest) {
         String url = properties.getProperty("MerchantLogin");
         LoginResponse loginResponse = new LoginResponse(0, "", "", "");
 
-        try
-        {
+        try {
             loginResponse = restTemplate.exchange(url,
                     HttpMethod.POST, new HttpEntity<>(loginRequest),
                     LoginResponse.class).getBody();
-        }
-        catch (RestClientException e)
-        {
+        } catch (RestClientException e) {
             logger.info("RestClientException: " + e.getMessage());
         }
         return loginResponse;
     }
 
     public TransactionListResponse getTransactionListResponse(TransactionListRequest transactionListRequest,
-            HttpSession httpSession)
-    {
+            HttpSession httpSession) {
         String url = properties.getProperty("TransactionQuery");
         logger.info("URL: " + url);
         AuthenticationData authenticationData = (AuthenticationData) httpSession.getAttribute("auth");
         logger.info("AuthenticationData.Token: " + authenticationData.getToken());
         TransactionListResponse transactionListResponse = new TransactionListResponse();
-        try
-        {
+        try {
             transactionListResponse
                     = restTemplate.exchange(url, HttpMethod.POST,
                             new HttpEntity<>(transactionListRequest,
                                     HttpUtils.generateAuthorizationHeader(authenticationData.getToken())),
                             TransactionListResponse.class).getBody();
-        }
-        catch (RestClientException e)
-        {
+        } catch (RestClientException e) {
             logger.info("RestClientException: " + e.getMessage());
         }
         int currentPage = transactionListResponse.getCurrent_page();
-        while (transactionListResponse.getNext_page_url() != (Object) null)
-        {
+        while (transactionListResponse.getNext_page_url() != (Object) null) {
             transactionListRequest.setPage(Integer.toString(++currentPage));
             TransactionListResponse tempListResponse = new TransactionListResponse();
-            try
-            {
+            try {
                 tempListResponse
                         = restTemplate.exchange(url, HttpMethod.POST,
                                 new HttpEntity<>(transactionListRequest,
                                         HttpUtils.generateAuthorizationHeader(authenticationData.getToken())),
                                 TransactionListResponse.class).getBody();
-            }
-            catch (RestClientException e)
-            {
+            } catch (RestClientException e) {
                 logger.info("RestClientException: " + e.getMessage());
             }
             transactionListResponse.getDataList().addAll(tempListResponse.getDataList());
@@ -126,113 +107,111 @@ public class ApiProcess
 
     public TransactionReportResponse getTransactionReportResponse(
             TransactionReportRequest transactionReportRequest,
-            HttpSession httpSession)
-    {
+            HttpSession httpSession) {
         String url = properties.getProperty("TransactionReport");
         logger.info("URL: " + url);
         AuthenticationData authenticationData = (AuthenticationData) httpSession.getAttribute("auth");
         logger.info("AuthenticationData.Token: " + authenticationData.getToken());
         TransactionReportResponse transactionReportResponse = new TransactionReportResponse();
-        try
-        {
+        try {
             transactionReportResponse
                     = restTemplate.exchange(url, HttpMethod.POST,
                             new HttpEntity<>(transactionReportRequest,
                                     HttpUtils.generateAuthorizationHeader(authenticationData.getToken())),
                             TransactionReportResponse.class).getBody();
-        }
-        catch (RestClientException e)
-        {
+        } catch (RestClientException e) {
             logger.info("RestClientException: " + e.getMessage());
         }
-        try
-        {
+        try {
             logger.info("TransactionReportResponse: "
                     + (new ObjectMapper())
                             .writeValueAsString(transactionReportResponse));
-        }
-        catch (JsonProcessingException ex)
-        {
+        } catch (JsonProcessingException ex) {
             logger.info("JsonProcessingException: " + ex.getMessage());
         }
         return transactionReportResponse;
     }
-    private Object createJSONSchema(Object scanObject, Object schemaObject)
-    {
-        if (scanObject instanceof JSONArray)
-        {
+
+    public ClientResponse getClientResponse(
+            ClientRequest clientRequest,
+            HttpSession httpSession) {
+        String url = properties.getProperty("GetClient");
+        logger.info("URL: " + url);
+        AuthenticationData authenticationData = (AuthenticationData) httpSession.getAttribute("auth");
+        logger.info("AuthenticationData.Token: " + authenticationData.getToken());
+        ClientResponse clientResponse = new ClientResponse();
+        try {
+            clientResponse
+                    = restTemplate.exchange(url, HttpMethod.POST,
+                            new HttpEntity<>(clientRequest,
+                                    HttpUtils.generateAuthorizationHeader(authenticationData.getToken())),
+                            ClientResponse.class).getBody();
+        } catch (RestClientException e) {
+            logger.info("RestClientException: " + e.getMessage());
+        }
+        try {
+            logger.info("ClientResponse: "
+                    + (new ObjectMapper())
+                            .writeValueAsString(clientResponse));
+        } catch (JsonProcessingException ex) {
+            logger.info("JsonProcessingException: " + ex.getMessage());
+        }
+        return clientResponse;
+    }
+
+    private Object createJSONSchema(Object scanObject, Object schemaObject) {
+        if (scanObject instanceof JSONArray) {
             JSONArray scanJSONArray = (JSONArray) scanObject;
             JSONArray schemaJSONArray = (JSONArray) schemaObject;
-            for (int i = 0; i < scanJSONArray.length(); i++)
-            {
+            for (int i = 0; i < scanJSONArray.length(); i++) {
                 Object newScanObject = scanJSONArray.get(i);
                 if (schemaJSONArray.length() < 1) {
                     schemaJSONArray.put(newScanObject);
-                }
-                else
-                {
+                } else {
                     if ((newScanObject instanceof JSONArray)
-                            || (newScanObject instanceof JSONObject))
-                    {
+                            || (newScanObject instanceof JSONObject)) {
                         schemaJSONArray.put(0,
                                 createJSONSchema(newScanObject,
                                         schemaJSONArray.get(0)));
-                    }
-                    else
-                    {
-                        if (!schemaJSONArray.get(0).equals(newScanObject))
-                        {
+                    } else {
+                        if (!schemaJSONArray.get(0).equals(newScanObject)) {
                             schemaJSONArray.put(0, newScanObject);
                         }
                     }
                 }
             }
             return schemaJSONArray;
-        }
-        else if (scanObject instanceof JSONObject)
-        {
+        } else if (scanObject instanceof JSONObject) {
             JSONObject scanJSONObject = (JSONObject) scanObject;
             JSONObject schemaJSONObject = (JSONObject) schemaObject;
             Iterator<?> keys = scanJSONObject.keys();
-            while (keys.hasNext())
-            {
+            while (keys.hasNext()) {
                 String key = (String) keys.next();
                 Object newScanObject = scanJSONObject.get(key);
-                if (newScanObject instanceof JSONArray)
-                {
-                    if (schemaJSONObject.has(key))
-                    {
+                if (newScanObject instanceof JSONArray) {
+                    if (schemaJSONObject.has(key)) {
                         Object newSchemaObject = schemaJSONObject.get(key);
                         schemaJSONObject.put(key,
                                 createJSONSchema(newScanObject, newSchemaObject));
-                    }
-                    else
-                    {
+                    } else {
                         JSONArray newSchemaJSONArray = new JSONArray();
                         schemaJSONObject.put(key,
                                 createJSONSchema(newScanObject,
                                         newSchemaJSONArray));
                     }
-                } else if (newScanObject instanceof JSONObject)
-                {
-                    if (schemaJSONObject.has(key))
-                    {
+                } else if (newScanObject instanceof JSONObject) {
+                    if (schemaJSONObject.has(key)) {
                         Object newSchemaObject = schemaJSONObject.get(key);
                         schemaJSONObject.put(key,
                                 createJSONSchema(newScanObject, newSchemaObject));
-                    }
-                    else
-                    {
+                    } else {
                         JSONObject newSchemaJSONObject = new JSONObject();
                         schemaJSONObject.put(key,
                                 createJSONSchema(newScanObject,
                                         newSchemaJSONObject));
                     }
-                }
-                else
-                {
-                    if (!schemaJSONObject.has(key))
-                    {
+                } else {
+                    if (!schemaJSONObject.has(key)) {
                         schemaJSONObject.put(key, newScanObject);
                     }
                 }

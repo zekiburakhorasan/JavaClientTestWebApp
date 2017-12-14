@@ -19,25 +19,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @author HORASAN
  */
 @Controller
-public class DefaultController extends WebMvcConfigurerAdapter
-{
+public class DefaultController extends WebMvcConfigurerAdapter {
+
     @Autowired
     private HttpSession httpSession;
-    public void addViewController(ViewControllerRegistry registry)
-    {
+
+    public void addViewController(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         super.addViewControllers(registry);
     }
+
     @ModelAttribute("email")
-    public String getEmail()
-    {
+    public String getEmail() {
         AuthenticationData authenticationData = (AuthenticationData) httpSession.getAttribute("auth");
-        if (authenticationData != null)
-        {
+        if (authenticationData != null) {
             return authenticationData.getEmail();
         }
         return "";
     }
+
     @GetMapping(path = "/")
     public String getIndex() {
         return "index";
@@ -46,5 +46,10 @@ public class DefaultController extends WebMvcConfigurerAdapter
     @GetMapping(path = "/login")
     public String getLogin() {
         return "login";
+    }
+
+    @GetMapping(path = "/client")
+    public String getClient() {
+        return "client";
     }
 }
